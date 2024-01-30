@@ -4,15 +4,12 @@ static void    init_philos(t_arg *ptr);
 
 int     init_arg(t_arg *ptr)
 {
-    int i;
-
     sem_unlink("forks");
     sem_unlink("print");
     //semaphore for forks
     ptr->forks = sem_open("forks", O_CREAT, 0777, ptr->philos_number);
     //semaphore for printing
     ptr->print = sem_open("print", O_CREAT, 0777, 1);
-    int x;
     init_philos(ptr);
     ptr->start_time = get_time();
     ptr->finished_philos = 0;

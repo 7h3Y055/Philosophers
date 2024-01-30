@@ -7,7 +7,7 @@ CFLAGS = -Wall -Werror -Wextra -g #-g3 #-fsanitize=address
 all:$(NAME)
 
 $(NAME):$(OBJS)
-	gcc $(OBJS) -no-pie $(CFLAGS) -o $(NAME)
+	gcc $(OBJS) $(CFLAGS) -o $(NAME)
 
 clean:
 	rm -rf $(OBJS)

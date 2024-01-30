@@ -9,7 +9,7 @@ int     philo(t_arg *ptr)
 
     while (++i < ptr->philos_number)
     {
-        usleep(500);//100
+        usleep(500);
         ptr->philo[i].pid = fork();
         if (ptr->philo[i].pid == 0)
         {
@@ -26,6 +26,8 @@ int     philo(t_arg *ptr)
         {
             if (waitpid(ptr->philo[i].pid, &ptr->pstatus, 0) > 0)
             {
+                if (ptr->philo[i].status == 'f')
+                    break ;
                 tmp_id = i;
                 i = -1;
                 while (++i < ptr->philos_number)
@@ -46,8 +48,10 @@ int     routine(t_philo *philo)
     flag = 1;
     while (1)
     {
-        if (get_time() - philo->last_eat > philo->arg->time_to_sleep + 200 || flag)
+        if ((get_time() - philo->last_eat > philo->arg->time_to_sleep + 200 || flag))
         {
+            if (philo->status == 'f')
+                exit(0);
             if (ft_take_forks(philo))
                 return (1);
             if (ft_eat(philo))
@@ -68,7 +72,7 @@ void    *monitor(void *addr)
     philo = addr;
     while (1)
     {
-        if (get_time() - philo->last_eat > philo->arg->time_to_die)
+        if (philo->status != 'f' && get_time() - philo->last_eat > philo->arg->time_to_die)
         {
             print_status(philo, 'd');
             exit(0);
