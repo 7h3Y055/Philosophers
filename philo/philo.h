@@ -18,6 +18,7 @@ typedef struct s_philo
     pthread_mutex_t *fork_2;
     long            eat_counter;
     pthread_mutex_t le_th;
+    pthread_mutex_t *m_status;
     long            last_eat;
     char            status;
     t_arg           *arg;
@@ -39,6 +40,7 @@ typedef struct s_arg
     t_philo *philo;
     pthread_mutex_t  *forks;
     pthread_mutex_t   mtx;
+    pthread_mutex_t *m_status;
 
 }   t_arg;
 
@@ -58,5 +60,5 @@ int    ft_sleep_think(t_philo *philo);
 int ft_take_forks(t_philo *philo);
 void    clean_all(t_arg *ptr);
 
-int is_some_philo_die(t_arg *ptr);
+int is_some_philo_die(t_arg *ptr, int flag);
 #endif

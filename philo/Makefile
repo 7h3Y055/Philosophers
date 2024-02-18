@@ -1,7 +1,7 @@
 NAME = philo
 SRCS = check_arg.c  init_arg.c  main.c  philo.c  utils_0.c utils_1.c
 OBJS = $(SRCS:.c=.o)
-CFLAGS = -Wall -Werror -Wextra -g #-g3 #-fsanitize=address
+CFLAGS = -Wall -Werror -Wextra -g -g3 -fsanitize=thread
 
 
 all:$(NAME)

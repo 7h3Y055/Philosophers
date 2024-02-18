@@ -45,7 +45,7 @@ void    ft_usleep(long n)
 
 void    print_status(t_philo *philo, char status)
 {
-    if (is_some_philo_die(philo->arg))
+    if (is_some_philo_die(philo->arg, 0))
             return ;
     if (status == 't')
         printf("%ld\t%d is thinking\n", get_time() - philo->arg->start_time, philo->id);

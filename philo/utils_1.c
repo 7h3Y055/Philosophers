@@ -30,13 +30,14 @@ int    ft_eat(t_philo *philo)
 
 int ft_sleep_think(t_philo *philo)
 {
-    if (is_some_philo_die(philo->arg))
+    (void)philo;
+    if (is_some_philo_die(philo->arg, 0))
         return (1);
     print_status(philo, 's');
-    if (is_some_philo_die(philo->arg))
+    if (is_some_philo_die(philo->arg, 0))
         return (1);
     ft_usleep(philo->arg->time_to_sleep);
-    if (is_some_philo_die(philo->arg))
+    if (is_some_philo_die(philo->arg, 0))
         return (1);
     print_status(philo, 't');
     return (0);
@@ -44,17 +45,17 @@ int ft_sleep_think(t_philo *philo)
 
 int ft_take_forks(t_philo *philo)
 {
-    if (is_some_philo_die(philo->arg))
+    if (is_some_philo_die(philo->arg, 0))
         return (1);
 
     pthread_mutex_lock(philo->fork_1);
 
-    if (is_some_philo_die(philo->arg))
+    if (is_some_philo_die(philo->arg, 0))
         return (1);
 
     print_status(philo, 'f');      
 
-    if (is_some_philo_die(philo->arg))
+    if (is_some_philo_die(philo->arg, 0))
         return (1);
 
     pthread_mutex_lock(philo->fork_2);

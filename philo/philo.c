@@ -4,11 +4,16 @@ int     philo(t_arg *ptr)
 {
     int i;
     int n;
+    pthread_mutex_t m_status;
 
+    pthread_mutex_init(&m_status, NULL);
+    ptr->m_status = &m_status;
+    // ptr->m_status = (void *)0xFFFFFFFFFFF;
     i = -1;
     n = ptr->philos_number;
     while (++i < ptr->philos_number)
     {
+        ptr->philo[i].m_status = &m_status;
         if (pthread_create(&ptr->philo[i].th, NULL, routine, &ptr->philo[i]) != 0)
             return (-1);
         usleep(50);
@@ -20,15 +25,31 @@ int     philo(t_arg *ptr)
     while (++i < n)
         if (pthread_join(ptr->philo[i].th, NULL) != 0)
             return (-1);
+    pthread_mutex_destroy(&m_status);
     return (0);
 }
 
-int is_some_philo_die(t_arg *ptr)
+int is_some_philo_die(t_arg *ptr, int flag)
 {
-    pthread_mutex_lock(&ptr->mtx);
-    if (ptr->status == 'd')
-        return (1);
-    pthread_mutex_unlock(&ptr->mtx);
+    // printf("%p\n", ptr->m_status);
+    // exit (0);
+    // printf("[%p]\n", ptr->m_status);
+    if ((long)ptr->m_status == 1)
+        return 0;
+    pthread_mutex_lock(ptr->m_status);
+    if (flag)
+        ptr->status = 'd';
+    else if (!flag)
+    {
+        // printf("%p\n", ptr->m_status);
+        // pthread_mutex_lock(ptr->m_status);
+        if (ptr->status == 'd')
+        {
+            pthread_mutex_unlock(ptr->m_status);
+            return (1);
+        }
+    }
+    pthread_mutex_unlock(ptr->m_status);
     return (0);
 }
 
@@ -87,8 +108,10 @@ void monitor(t_arg *ptr)
             {
                 pthread_mutex_unlock(&ptr->mtx);
                 print_status(&ptr->philo[i], 'd');
-                pthread_mutex_lock(&ptr->mtx);
-                ptr->status = 'd';
+                is_some_philo_die(ptr, 1);
+                // pthread_mutex_lock(&ptr->m_status);
+                // ptr->status = 'd';
+                // pthread_mutex_unlock(&ptr->m_status);
                 return ;
             }
             pthread_mutex_unlock(&ptr->mtx);
